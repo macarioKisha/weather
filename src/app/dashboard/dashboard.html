@@ -1,0 +1,61 @@
+<div class="weather-dashboard">
+  <div class="input-section">
+    <input 
+      type="text" 
+      [(ngModel)]="cityInput" 
+      placeholder="Enter city name"
+      (keyup.enter)="addCity()"
+    >
+    <button (click)="addCity()">Add City</button>
+  </div>
+
+  <div class="filter-section">
+    <div class="filter-group">
+      <label for="displayCount">Show cities:</label>
+      <select id="displayCount" [(ngModel)]="displayCount">
+        <option value="all">All</option>
+        <option value="3">Top 3</option>
+        <option value="5">Top 5</option>
+        <option value="10">Top 10</option>
+      </select>
+    </div>
+    
+    <div class="filter-group">
+      <label for="temperatureFilter">Temperature:</label>
+      <select id="temperatureFilter" [(ngModel)]="temperatureFilter">
+        <option value="all">All</option>
+        <option value="hot">Hot (>20°C)</option>
+        <option value="cold">Cold (≤20°C)</option>
+      </select>
+    </div>
+  </div>
+
+  <div *ngIf="apiError" class="api-error">
+    {{ apiError }}
+  </div>
+
+  <div *ngIf="cities.length === 0" class="no-cities">
+    <p>No cities added yet. Enter a city name above to get started!</p>
+  </div>
+
+  <div class="cities-grid" *ngIf="cities.length > 0">
+    <div class="city-card" *ngFor="let city of filteredCities(); let i = index">
+      <button class="remove-btn" (click)="removeCity(i)">×</button>
+      <h2>{{city.city}}</h2>
+      
+      <div *ngIf="city.weather" class="weather-info">
+        <img [src]="city.weather.current.weather_icons[0]" alt="Weather icon for {{city.city}}">
+        <p class="temperature">{{city.weather.current.temperature}}°C</p>
+        <p class="description">{{city.weather.current.weather_descriptions[0]}}</p>
+      </div>
+      
+      <div *ngIf="city.error" class="error-message">
+        {{city.error}}
+      </div>
+      
+      <div *ngIf="!city.weather && !city.error" class="loading">
+        Loading...
+      </div>
+    </div>
+  </div>
+</div>
