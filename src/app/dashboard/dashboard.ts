@@ -57,6 +57,13 @@ export class Dashboard {
     this.cities.splice(index, 1);
   }
 
+  removeCityByName(name: string) {
+    const idx = this.cities.findIndex(c => c.city.toLowerCase() === name.toLowerCase());
+    if (idx > -1) {
+      this.cities.splice(idx, 1);
+    }
+  }
+
   filteredCities(): CityWeather[] {
     let filtered = [...this.cities];
 

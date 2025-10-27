@@ -24,7 +24,7 @@
       <label for="temperatureFilter">Temperature:</label>
       <select id="temperatureFilter" [(ngModel)]="temperatureFilter">
         <option value="all">All</option>
-        <option value="hot">Hot (>20°C)</option>
+        <option value="hot">Hot (&gt;20°C)</option>
         <option value="cold">Cold (≤20°C)</option>
       </select>
     </div>
@@ -38,24 +38,55 @@
     <p>No cities added yet. Enter a city name above to get started!</p>
   </div>
 
-  <div class="cities-grid" *ngIf="cities.length > 0">
-    <div class="city-card" *ngFor="let city of filteredCities(); let i = index">
-      <button class="remove-btn" (click)="removeCity(i)">×</button>
-      <h2>{{city.city}}</h2>
-      
-      <div *ngIf="city.weather" class="weather-info">
-        <img [src]="city.weather.current.weather_icons[0]" alt="Weather icon for {{city.city}}">
-        <p class="temperature">{{city.weather.current.temperature}}°C</p>
-        <p class="description">{{city.weather.current.weather_descriptions[0]}}</p>
-      </div>
-      
-      <div *ngIf="city.error" class="error-message">
-        {{city.error}}
-      </div>
-      
-      <div *ngIf="!city.weather && !city.error" class="loading">
-        Loading...
-      </div>
-    </div>
+  <!-- Table view -->
+  <div *ngIf="cities.length > 0">
+    <table class="cities-table" *ngIf="filteredCities().length > 0; else noMatch">
+      <thead>
+        <tr>
+          <th>City</th>
+          <th>Icon</th>
+          <th>Temperature</th>
+          <th>Description</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let city of filteredCities()">
+          <td class="city-name">{{ city.city }}</td>
+          <td class="icon-cell">
+            <ng-container *ngIf="city.weather; else iconLoading">
+              <img [src]="city.weather.current.weather_icons[0]" alt="Weather icon for {{city.city}}">
+            </ng-container>
+            <ng-template #iconLoading>
+              <span class="small-loading">…</span>
+            </ng-template>
+          </td>
+          <td>
+            <ng-container *ngIf="city.weather; else tempLoading">
+              {{ city.weather.current.temperature }}°C
+            </ng-container>
+            <ng-template #tempLoading>
+              <span class="small-loading">Loading</span>
+            </ng-template>
+          </td>
+          <td>
+            <ng-container *ngIf="city.weather; else descLoading">
+              {{ city.weather.current.weather_descriptions[0] }}
+            </ng-container>
+            <ng-template #descLoading>
+              <span class="small-loading">Loading</span>
+            </ng-template>
+            <div *ngIf="city.error" class="error-message">{{ city.error }}</div>
+          </td>
+          <td>
+            <button class="remove-btn" (click)="removeCityByName(city.city)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #noMatch>
+      <div class="no-match">No cities match the current filters.</div>
+    </ng-template>
   </div>
 </div>
