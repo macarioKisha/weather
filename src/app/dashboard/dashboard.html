@@ -1,92 +1,78 @@
-<div class="weather-dashboard">
-  <div class="input-section">
-    <input 
-      type="text" 
-      [(ngModel)]="cityInput" 
-      placeholder="Enter city name"
-      (keyup.enter)="addCity()"
-    >
-    <button (click)="addCity()">Add City</button>
+<div class="container weather-dashboard py-4">
+  <div class="row mb-3">
+    <div class="col-md-8">
+      <input type="text" class="form-control" [(ngModel)]="cityInput" placeholder="Enter city name" (keyup.enter)="addCity()">
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-primary w-100" (click)="addCity()">Add City</button>
+    </div>
+    <div class="col-md-2 text-end">
+      <small class="text-muted">Total: {{ cities.length }}</small>
+    </div>
   </div>
 
-  <div class="filter-section">
-    <div class="filter-group">
-      <label for="displayCount">Show cities:</label>
-      <select id="displayCount" [(ngModel)]="displayCount">
+  <div class="row mb-3 align-items-center">
+    <div class="col-sm-6 col-md-4">
+      <label class="form-label small mb-1" for="displayCount">Show cities</label>
+      <select id="displayCount" class="form-select" [(ngModel)]="displayCount">
         <option value="all">All</option>
         <option value="3">Top 3</option>
         <option value="5">Top 5</option>
         <option value="10">Top 10</option>
       </select>
     </div>
-    
-    <div class="filter-group">
-      <label for="temperatureFilter">Temperature:</label>
-      <select id="temperatureFilter" [(ngModel)]="temperatureFilter">
+    <div class="col-sm-6 col-md-4">
+      <label class="form-label small mb-1" for="temperatureFilter">Temperature</label>
+      <select id="temperatureFilter" class="form-select" [(ngModel)]="temperatureFilter">
         <option value="all">All</option>
         <option value="hot">Hot (&gt;20°C)</option>
         <option value="cold">Cold (≤20°C)</option>
       </select>
     </div>
+    <div class="col-md-4">
+      <div *ngIf="apiError" class="alert alert-danger py-2 mb-0" role="alert">{{ apiError }}</div>
+    </div>
   </div>
 
-  <div *ngIf="apiError" class="api-error">
-    {{ apiError }}
-  </div>
+  <div *ngIf="cities.length === 0" class="alert alert-secondary">No cities added yet. Enter a city name above to get started!</div>
 
-  <div *ngIf="cities.length === 0" class="no-cities">
-    <p>No cities added yet. Enter a city name above to get started!</p>
-  </div>
-
-  <!-- Table view -->
   <div *ngIf="cities.length > 0">
-    <table class="cities-table" *ngIf="filteredCities().length > 0; else noMatch">
-      <thead>
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-light">
         <tr>
           <th>City</th>
           <th>Icon</th>
           <th>Temperature</th>
           <th>Description</th>
-          <th>Actions</th>
+          <th class="text-end">Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let city of filteredCities()">
-          <td class="city-name">{{ city.city }}</td>
-          <td class="icon-cell">
+          <td>{{ city.city }}</td>
+          <td>
             <ng-container *ngIf="city.weather; else iconLoading">
-              <img [src]="city.weather.current.weather_icons[0]" alt="Weather icon for {{city.city}}">
+              <img [src]="city.weather.current.weather_icons[0]" alt="icon for {{city.city}}" class="rounded weather-icon">
             </ng-container>
             <ng-template #iconLoading>
-              <span class="small-loading">…</span>
+              <div class="spinner-border spinner-border-sm text-secondary" role="status"><span class="visually-hidden">Loading</span></div>
             </ng-template>
           </td>
           <td>
-            <ng-container *ngIf="city.weather; else tempLoading">
-              {{ city.weather.current.temperature }}°C
-            </ng-container>
-            <ng-template #tempLoading>
-              <span class="small-loading">Loading</span>
-            </ng-template>
+            <ng-container *ngIf="city.weather; else tempLoading">{{ city.weather.current.temperature }}°C</ng-container>
+            <ng-template #tempLoading><span class="text-muted small">Loading</span></ng-template>
           </td>
           <td>
-            <ng-container *ngIf="city.weather; else descLoading">
-              {{ city.weather.current.weather_descriptions[0] }}
-            </ng-container>
-            <ng-template #descLoading>
-              <span class="small-loading">Loading</span>
-            </ng-template>
-            <div *ngIf="city.error" class="error-message">{{ city.error }}</div>
+            <ng-container *ngIf="city.weather; else descLoading">{{ city.weather.current.weather_descriptions[0] }}</ng-container>
+            <ng-template #descLoading><span class="text-muted small">Loading</span></ng-template>
+            <div *ngIf="city.error" class="text-danger small mt-1">{{ city.error }}</div>
           </td>
-          <td>
-            <button class="remove-btn" (click)="removeCityByName(city.city)">Delete</button>
+          <td class="text-end">
+            <button class="btn btn-sm btn-danger" (click)="removeCityByName(city.city)">Delete</button>
           </td>
         </tr>
       </tbody>
     </table>
-
-    <ng-template #noMatch>
-      <div class="no-match">No cities match the current filters.</div>
-    </ng-template>
+    <div *ngIf="filteredCities().length === 0" class="alert alert-info">No cities match the current filters.</div>
   </div>
 </div>
