@@ -59,7 +59,8 @@
               "buildTarget": "WeatherDashboard:build:production"
             },
             "development": {
-              "buildTarget": "WeatherDashboard:build:development"
+              "buildTarget": "WeatherDashboard:build:development",
+              "proxyConfig": "src/proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

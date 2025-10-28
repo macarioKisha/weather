@@ -1,7 +1,9 @@
 
 <div class="container weather-dashboard py-4">
   <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
-  <input type="text" class="form-control flex-grow-1 input-width" [(ngModel)]="cityInput" placeholder="Enter city name" (keyup.enter)="addCity()">
+  <input type="text" class="form-control flex-grow-1 input-width"
+  [(ngModel)]="cityInput" placeholder="Enter city name"
+  (keyup.enter)="addCity()">
     <button class="btn btn-primary" (click)="addCity()">Add City</button>
     <small class="text-muted ms-auto">Total: {{ cities.length }}</small>
   </div>
