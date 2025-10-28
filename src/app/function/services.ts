@@ -18,7 +18,7 @@ export interface WeatherData {
 })
 export class Services {
   private apiKey = '5e9a089cb0faf5f6b1ec8b211a019737';
-  private baseUrl = 'http://api.weatherstack.com/current';
+  private baseUrl = 'https://api.weatherstack.com/current';
 
   constructor(private http: HttpClient) {}
 
