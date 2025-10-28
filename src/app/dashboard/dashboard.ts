@@ -27,19 +27,25 @@ export class Dashboard {
 
   addCity() {
     this.apiError = '';
-    if (!this.cityInput.trim()) {
+    const normalizedInput = this.cityInput.trim().toLowerCase();
+
+    if (!normalizedInput) {
       return;
     }
 
-    if (this.cities.some(c => c.city.toLowerCase() === this.cityInput.toLowerCase())) {
+    if (this.cities.some(c => c.city.toLowerCase() === normalizedInput)) {
       this.apiError = 'City is already added to the dashboard';
       return;
     }
 
-    const newCity: CityWeather = { city: this.cityInput };
+    // Store the original input with proper capitalization
+    const formattedCity = this.cityInput.trim().charAt(0).toUpperCase() +
+                         this.cityInput.trim().slice(1).toLowerCase();
+
+    const newCity: CityWeather = { city: formattedCity };
     this.cities.push(newCity);
-    
-    this.weatherService.getWeather(this.cityInput).subscribe({
+
+    this.weatherService.getWeather(formattedCity).subscribe({
       next: (data) => {
         newCity.weather = data;
       },

@@ -1,36 +1,31 @@
+
 <div class="container weather-dashboard py-4">
-  <div class="row mb-3">
-    <div class="col-md-8">
-      <input type="text" class="form-control" [(ngModel)]="cityInput" placeholder="Enter city name" (keyup.enter)="addCity()">
-    </div>
-    <div class="col-md-2">
-      <button class="btn btn-primary w-100" (click)="addCity()">Add City</button>
-    </div>
-    <div class="col-md-2 text-end">
-      <small class="text-muted">Total: {{ cities.length }}</small>
-    </div>
+  <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
+  <input type="text" class="form-control flex-grow-1 input-width" [(ngModel)]="cityInput" placeholder="Enter city name" (keyup.enter)="addCity()">
+    <button class="btn btn-primary" (click)="addCity()">Add City</button>
+    <small class="text-muted ms-auto">Total: {{ cities.length }}</small>
   </div>
 
-  <div class="row mb-3 align-items-center">
-    <div class="col-sm-6 col-md-4">
+  <div class="d-flex flex-wrap gap-3 mb-3 align-items-end">
+    <div>
       <label class="form-label small mb-1" for="displayCount">Show cities</label>
-      <select id="displayCount" class="form-select" [(ngModel)]="displayCount">
+  <select id="displayCount" class="form-select select-width" [(ngModel)]="displayCount">
         <option value="all">All</option>
         <option value="3">Top 3</option>
         <option value="5">Top 5</option>
         <option value="10">Top 10</option>
       </select>
     </div>
-    <div class="col-sm-6 col-md-4">
+    <div>
       <label class="form-label small mb-1" for="temperatureFilter">Temperature</label>
-      <select id="temperatureFilter" class="form-select" [(ngModel)]="temperatureFilter">
+  <select id="temperatureFilter" class="form-select select-width" [(ngModel)]="temperatureFilter">
         <option value="all">All</option>
         <option value="hot">Hot (&gt;20°C)</option>
         <option value="cold">Cold (≤20°C)</option>
       </select>
     </div>
-    <div class="col-md-4">
-      <div *ngIf="apiError" class="alert alert-danger py-2 mb-0" role="alert">{{ apiError }}</div>
+    <div *ngIf="apiError" class="flex-grow-1">
+      <div class="alert alert-danger py-2 mb-0" role="alert">{{ apiError }}</div>
     </div>
   </div>
 
